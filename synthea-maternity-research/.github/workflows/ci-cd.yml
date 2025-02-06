@@ -1,0 +1,33 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+
+      - name: Prepare environment
+        run: |
+          conda env create -f environment.yml
+          conda activate maternity_research
+
+      - name: Run scripts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          # Execute each script in the correct environment
+          conda run -n maternity_research python scripts/data_ingestion.py
+          conda run -n maternity_research python scripts/feature_engineering.py
+          conda run -n maternity_research python scripts/clustering.py
+          conda run -n maternity_research python scripts/narrative_generator.py

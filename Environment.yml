@@ -1,0 +1,15 @@
+name: maternity_research
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pandas
+  - numpy
+  - scikit-learn
+  - matplotlib
+  - jupyter
+  - requests
+  - pip
+  - pip:
+    - openai
+    - anthropic  # If published to PyPI; otherwise you may install from a URL or local package
